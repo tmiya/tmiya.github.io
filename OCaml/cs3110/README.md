@@ -3,7 +3,7 @@
 このページは [OCaml Programming: Correct + Efficient + Beautiful](https://cs3110.github.io/textbook/ocaml_programming.pdf) の勉強メモのページです。
 
 
-## Install OPAM
+## 環境整備
 
 OCaml 4.14.0 が選択肢に出ないので 4.12.0 でとりあえず妥協。
 
