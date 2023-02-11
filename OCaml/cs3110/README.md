@@ -25,3 +25,18 @@ http://erratique.ch/ の証明書エラーで install が失敗する。
 ```
 http://erratique.ch/software/react/releases/react-1.2.1.tbz\" exited with code 5 \"ERROR: cannot verify erratique.ch's certificate, issued by 'CN=R3,O=Let\\'s Encrypt,C=US':\")")
 ```
+
+[stackoverflow](https://stackoverflow.com/questions/69143209/opam-init-fails-to-verify-certificate) の記述
+
+```
+$ opam init github git+https://github.com/ocaml/opam-repository.git
+```
+を試したところ、`opam install` が通る様になった。
+
+以下、notebook で作業したいので
+
+```
+$ opam install jupyter
+```
+も行う。(python 側の jupyter nootbook のインストールは完了済み)
+
