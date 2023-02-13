@@ -40,3 +40,7 @@ $ opam install jupyter
 ```
 も行う。(python 側の jupyter nootbook のインストールは完了済み)
 
+https://akabe.github.io/ocaml-jupyter/ の手順で環境設定を行う。
+
+
+
