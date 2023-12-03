@@ -10,6 +10,9 @@ class Model():
     #self.to_update = {f"{self.key}/error": (lambda x: x._error_msg())}
     self.to_visible = dict()
     self.to_update = dict()
+  
+  def __str__(self):
+    return f"{self.__class__}({self.children})"
 
   def handler(self, event, values):
     print(f"{self.__class__}.handler({event}, {values})")
@@ -50,7 +53,7 @@ class View():
   def handler(self, window, event, values):
     print(f"{self.__class__}.handler(event={event}, values={values})")
     self.model.handler(event, values)
-    self.update(window)
+    #self.update(window)
       
   def update(self, window):
     print(f"{self.__class__}.update()")

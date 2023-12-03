@@ -29,7 +29,8 @@ class Levels(Model):
       case '/level/remove':
         self.classes.pop()
       case _:
-        print(f"ERROR: event={event}, values={values}")
+        pass
+        #print(f"ERROR: event={event}, values={values}")
   
   def level_to_go(self):
     return len(self.classes)+1

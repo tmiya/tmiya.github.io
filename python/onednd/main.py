@@ -21,6 +21,7 @@ def main():
         print(f"dispatch({event}, {values})")
         root_view.handler(window, event, values)
     root.update(window)
+    print(root)
 
 if __name__ == '__main__':
   main()
