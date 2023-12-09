@@ -3,20 +3,20 @@ from typing import Dict, List, Tuple, Any, Callable
 
 from model import Model, View
 from levels import Levels, LevelsView
-from attributes import Attributes, AttributesView
+from abilities import Abilities, AbilitiesView
 
 class Root(Model):
   def __init__(self) -> None:
     super().__init__('/', {
       '/levels/': Levels(),
-      '/attributes/': Attributes()
+      '/abilities/': Abilities()
     })
 
 class RootView(View):
   def __init__(self) -> None:
     super().__init__('/', {
       '/levels/': LevelsView(),
-      '/attributes/': AttributesView()
+      '/abilities/': AbilitiesView()
     })
 
   def handler(self, event:str, values:Dict[str,Any]) -> None:
@@ -25,8 +25,10 @@ class RootView(View):
 
   def layout(self) -> List[List[Any]]:
     tabs = [
-      sg.Tab("Levels", self._children['/levels/'].layout(), key="/levels/"),
-      sg.Tab("Attributes", self._children['/attributes/'].layout(), key="/attributes/"),
+      sg.Tab("Abilities", self._children['/abilities/'].layout(), 
+             key="/abilities/"),
+      sg.Tab("Levels", self._children['/levels/'].layout(), 
+             key="/levels/"),
     ]
     return [[sg.TabGroup([tabs])]]
 

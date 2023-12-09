@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 import PySimpleGUI as sg
-from typing import Dict, List, Tuple, Any, Callable, Self
+from typing import Dict, List, Tuple, Any, Callable, Self, Optional
 
 class Subject(ABC):
   def notify(self) -> None:
@@ -16,6 +16,7 @@ class Model(Subject):
     super(Model, self).__init__()
     self._key: str = key
     self._view: View = None
+    self._root: Optional[Model] = None
     self._children: Dict[str,Self] = children
 
   def __str__(self):
@@ -26,6 +27,27 @@ class Model(Subject):
     for o in self._children.values():
       o.notify()
 
+  def set_root(self, root:Self) -> None:
+    self._root = root
+    for c in self._children.values():
+      c.set_root(root)
+  
+  def __getitem__(self, key:str) -> Self:
+    print(f"{self}.__getitem__({key})")
+    if self._key == key:
+      return self
+    elif key.startswith(self._key): # my decendant
+      if key in self._children:
+        return self._children[key]
+      else:
+        for k,v in self._children.items():
+          if key.startswith(k):
+            return v[key]
+    else:
+      if self._root._key == self._key:
+        raise KeyError(key)
+      else:
+        return self._root[key]
 
 class View(Observable):
   def __init__(self, key:str, children:Dict[str,Self]) -> None:

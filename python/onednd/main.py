@@ -8,8 +8,21 @@ def main():
   sg.theme('BlueMono')
   window = sg.Window('One D&D Character Builder', 
                       root_view.layout()).Finalize()
+  root.set_root(root)
   root_view.set_window(window)
   window.Maximize()
+
+  print(f"{root}['/']={root['/']}")
+  print(f"{root}['/levels/']={root['/levels/']}")
+  print(f"{root}['/abilities/']={root['/abilities/']}")
+  lv = root._children['/levels/']
+  print(f"{lv}['/']={lv['/']}")
+  print(f"{lv}['/levels/']={lv['/levels/']}")
+  print(f"{lv}['/abilities/']={lv['/abilities/']}")
+  ab = root._children['/abilities/']
+  print(f"{ab}['/']={ab['/']}")
+  print(f"{ab}['/levels/']={ab['/levels/']}")
+  print(f"{ab}['/abilities/']={ab['/abilities/']}")
 
   while True:
     event, values = window.read()
