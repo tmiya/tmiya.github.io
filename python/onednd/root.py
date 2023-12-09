@@ -1,25 +1,27 @@
 import PySimpleGUI as sg
+from typing import Dict, List, Tuple, Any, Callable
 
 from model import Model, View
-from levels import Levels, LevelsView
 
 class Root(Model):
-  def __init__(self):
-    super().__init__("/")
-    self.children = {
-      '/level': Levels()
-    }
+  def __init__(self) -> None:
+    super().__init__('/', {
+    })
 
 class RootView(View):
-  def __init__(self):
-    super().__init__("/")
-    self.children = {
-      '/level': LevelsView()
-    }
+  def __init__(self) -> None:
+    super().__init__('/', {
+    })
 
-  def layout(self):
-    print(self.children)
-    tabs = [
-      sg.Tab("Level", self.children['/level'].layout(), key="/level"),
+  def handler(self, event, values) -> None:
+    """Update self._model, and call self._model.notify()"""
+    super().andler(event, values)
+
+  def layout(self) -> List[List[Any]]:
+    return [
+      [sg.Text('Root')]
     ]
-    return [[sg.TabGroup([tabs])]]
+
+  def update(self, model:Model) -> None:
+    """Self view update out of rules be done in ConcreteView class."""
+    pass

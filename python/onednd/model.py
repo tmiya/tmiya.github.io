@@ -1,74 +1,75 @@
-import PySimpleGUI as sg
+from abc import ABC, abstractmethod
+from typing import Dict, List, Tuple, Any, Callable, Self
 
-class Model():
-  def __init__(self, key):
-    self.key = key
-    self.view = None # view
-    self.children = dict() # children models dict[str, Model]
-    self.to_disabled = dict()
-    #self.to_visible = {f"{self.key}/error": (lambda x: x._error())}
-    #self.to_update = {f"{self.key}/error": (lambda x: x._error_msg())}
-    self.to_visible = dict()
-    self.to_update = dict()
+class Subject(ABC):
+  def notify(self) -> None:
+    raise NotImplementedError
+
+class Observable(ABC):
+  def update(self) -> None:
+    raise NotImplementedError
   
+
+class Model(Subject):
+  def __init__(self, key:str, children:List[Self]) -> None:
+    super(Model, self).__init__()
+    self._key: str = key
+    self._view: View = None
+    self._children: Dict[str,Self] = dict()
+
   def __str__(self):
-    return f"{self.__class__}({self.children})"
+    return f"{self.__class__}(\'{self._key}\', {list(self._children.keys())})"
 
-  def handler(self, event, values):
-    print(f"{self.__class__}.handler({event}, {values})")
-    for child in self.children.values():
-      child.handler(event, values)
-    
-  def update(self, window):
-    print(f"{self.__class__}.update()")
-    for child in self.children.values():
-      child.update(window)
-    self.view.update(window)
+  def notify(self) -> None:
+    self._view.update(self)
+    for o in self._children:
+      o.update(self)
 
-  def _error(self):
-    return False
 
-  def _error_msg(self):
-    return ''
+class View(Observable):
+  def __init__(self, key:str, children:Dict[str,Self]) -> None:
+    super(View, self).__init__()
+    self._key: str = key
+    self._model: Model = None
+    self._window: Any = None
+    self._children: Dict[str,Self] = children
+    self.rules_disabled: Dict[str, Callable[[Model], bool]] = dict()
+    self.rules_visible: Dict[str, Callable[[Model], bool]] = dict()
+    self.rules_update: Dict[str, Callable[[Model], Any]] = dict()
 
-class View():
-  def __init__(self, key):
-    self.key = key
-    self.children = dict() # children dict[str, View]
-    self.model = None # model
-    self.label = ('', ('Arial', 28)) # (label, font)
+  def __str__(self):
+    return f"{self.__class__}(\'{self._key}\', {list(self._children.keys())})"
 
-  def content(self):
-    return []
-  
-  def layout(self):
-    layout = [
-      [sg.Text(self.label[0], font=self.label[1])],
-    #  [sg.Text('Error:', size=(50,5), font=('Arial'), text_color='#F00', 
-    #         visible=False, key=f"{self.key}/error")]
-    ]
-    layout.extend(self.content())
-    return layout
-  
-  def handler(self, window, event, values):
-    print(f"{self.__class__}.handler(event={event}, values={values})")
-    self.model.handler(event, values)
-    #self.update(window)
-      
-  def update(self, window):
-    print(f"{self.__class__}.update()")
-    print(self.model.to_update)
-    for key,func in self.model.to_update.items():
-      window[key].update(func(self.model))
-    for key,func in self.model.to_disabled.items():
-      window[key].update(disabled=func(self.model))
-    for key,func in self.model.to_visible.items():
-      window[key].update(visible=func(self.model))
-    for child in self.children.values():
-      child.update(window)
-  
-  def _f(self):
-    return ('Arial', 12)
+  def set_window(self, window:Any) -> None:
+    """Set self._window"""
+    self._window = window
+    for v in self._children:
+      v.set_window(window)
 
-  def _bold(self):
-    return ('Arial', 12, 'bold')
+  def handler(self, event, values) -> None:
+    """Update self._model, and call self._model.notify()"""
+    self._model.notify()
+
+  def layout(self) -> List[List[Any]]:
+    raise NotImplementedError
+
+  def update(self, model:Model) -> None:
+    """Self view update out of rules be done in ConcreteView class."""
+    for key,func in self._rules_update.items():
+      self._window[key].update(func(self._model))
+    for key,func in self._rules_disabled.items():
+      self._window[key].update(disabled=func(self._model))
+    for key,func in self._rules_visible.items():
+      self._window[key].update(visible=func(self._model))
+    for v in self._children:
+      v.update(model)
+
+
+def matching_model_and_view(model:Model, view:View):
+  """couples models and views recursively"""
+  print(f"matching_model_and_view({model}, {view})")
+  view._model = model
+  model._view = view
+  for k in set(model._children.keys()) & set(view._children.keys()):
+    matching_model_and_view(model._children[k], view._children[k])
+  return (model, view)

@@ -1,14 +1,14 @@
 import PySimpleGUI as sg
 
 from root import Root, RootView
-import util
+from model import matching_model_and_view
 
 def main():
-  root, root_view = util.model_and_view(Root(), RootView())
-  #del root.to_update['//error']
+  root, root_view = matching_model_and_view(Root(), RootView())
   sg.theme('BlueMono')
   window = sg.Window('One D&D Character Builder', 
                       root_view.layout()).Finalize()
+  root_view.set_window(window)
   window.Maximize()
 
   while True:
@@ -19,9 +19,9 @@ def main():
         break
       case _:
         print(f"dispatch({event}, {values})")
-        root_view.handler(window, event, values)
-    root.update(window)
-    print(root)
+        root_view.handler(event, values)
+    #root.update()
+    #print(root)
 
 if __name__ == '__main__':
   main()
