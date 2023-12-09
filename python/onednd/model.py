@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+import PySimpleGUI as sg
 from typing import Dict, List, Tuple, Any, Callable, Self
 
 class Subject(ABC):
@@ -11,19 +12,19 @@ class Observable(ABC):
   
 
 class Model(Subject):
-  def __init__(self, key:str, children:List[Self]) -> None:
+  def __init__(self, key:str, children:Dict[str,Self]) -> None:
     super(Model, self).__init__()
     self._key: str = key
     self._view: View = None
-    self._children: Dict[str,Self] = dict()
+    self._children: Dict[str,Self] = children
 
   def __str__(self):
     return f"{self.__class__}(\'{self._key}\', {list(self._children.keys())})"
 
   def notify(self) -> None:
     self._view.update(self)
-    for o in self._children:
-      o.update(self)
+    for o in self._children.values():
+      o.notify()
 
 
 class View(Observable):
@@ -33,9 +34,9 @@ class View(Observable):
     self._model: Model = None
     self._window: Any = None
     self._children: Dict[str,Self] = children
-    self.rules_disabled: Dict[str, Callable[[Model], bool]] = dict()
-    self.rules_visible: Dict[str, Callable[[Model], bool]] = dict()
-    self.rules_update: Dict[str, Callable[[Model], Any]] = dict()
+    self._rules_disabled: Dict[str, Callable[[Model], bool]] = dict()
+    self._rules_visible: Dict[str, Callable[[Model], bool]] = dict()
+    self._rules_update: Dict[str, Callable[[Model], Any]] = dict()
 
   def __str__(self):
     return f"{self.__class__}(\'{self._key}\', {list(self._children.keys())})"
@@ -43,15 +44,18 @@ class View(Observable):
   def set_window(self, window:Any) -> None:
     """Set self._window"""
     self._window = window
-    for v in self._children:
+    for v in self._children.values():
       v.set_window(window)
 
-  def handler(self, event, values) -> None:
+  def handler(self, event:str, values:Dict[str,Any]) -> None:
     """Update self._model, and call self._model.notify()"""
+    for key,view in self._children.items():
+      if event.startswith(key):
+        view.handler(event, values)
     self._model.notify()
 
   def layout(self) -> List[List[Any]]:
-    raise NotImplementedError
+    return [[sg.Text(self._key)]]
 
   def update(self, model:Model) -> None:
     """Self view update out of rules be done in ConcreteView class."""
@@ -61,8 +65,14 @@ class View(Observable):
       self._window[key].update(disabled=func(self._model))
     for key,func in self._rules_visible.items():
       self._window[key].update(visible=func(self._model))
-    for v in self._children:
+    for v in self._children.values():
       v.update(model)
+
+  def _h1(self):
+    return ('Arial', 24, 'bold')
+
+  def _bold(self):
+    return ('Arial', 12, 'bold')
 
 
 def matching_model_and_view(model:Model, view:View):

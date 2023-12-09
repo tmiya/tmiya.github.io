@@ -1,66 +1,61 @@
 import PySimpleGUI as sg
+from typing import Dict, List, Tuple, Any, Callable, Self
 
 from model import Model, View
-from clazz import Bard, Ranger
 
 class Levels(Model):
-  def __init__(self):
-    super().__init__("/level")
-    self.classes = []
-    self.to_disabled |= {
-      '/level/remove': (lambda x: len(x.classes)==0),
-      '/level/add': (lambda x: len(x.classes)==20),
-    }
-    self.to_update |= {
-      '/level/progress':
-       (lambda x: "\n".join([f"Lv {i+1}: {c.name}" for i,c 
-                             in enumerate(x.classes)])),
-    }
-  
-  def handler(self, event, values):
-    print("Levels.handler")
-    match event:
-      case '/level/add':
-        print(f"/level/add: {self.classes}")
-        self.classes.extend(
-          [c for c in self.choice() if c.name == values['/level/choice'][0]]
-        )
-        print(f"/level/add: {self.classes}")
-      case '/level/remove':
-        self.classes.pop()
-      case _:
-        pass
-        #print(f"ERROR: event={event}, values={values}")
-  
-  def level_to_go(self):
-    return len(self.classes)+1
-  
-  def choice(self):
-    return [
-      Bard(atLv=self.level_to_go()),
-      Ranger(atLv=self.level_to_go())
-    ]
+  def __init__(self) -> None:
+    super().__init__('/levels/', {})
+    self._progress:List[str] = []
+    self._choices = ['Bard', 'Ranger']
 
 class LevelsView(View):
-  def __init__(self):
-    super().__init__("/level")
-    self.label = ('Level', ('Arial', 28)) # (label, font)
-    self.key = '/level'
+  def __init__(self) -> None:
+    super().__init__('/levels/', {})
+    self._rules_disabled = {
+      '/levels/add': (lambda m: len(m._progress)>=20),
+      '/levels/remove': (lambda m: len(m._progress)<=0)
+    }
+    self._rules_update = {
+      '/levels/progress': 
+      (lambda m: "\n".join([f"Lv {i+1}: {s}" for i,s in enumerate(m._progress)]))
+    }
 
-  def content(self):
+  def handler(self, event:str, values:Dict[str,Any]) -> None:
+    match event:
+      case '/levels/add':
+        if len(values['/levels/choice'])==1 and len(self._model._progress)<20:
+          self._model._progress.append(values['/levels/choice'][0])
+        else:
+          print(f"ERROR: {self}.handler({event},{values})")
+      case '/levels/remove':
+        if len(self._model._progress)>0:
+          self._model._progress.pop()
+        else:
+          print(f"ERROR: {self}.handler({event},{values})")
+      case _:
+        print(f"ERROR: {self}.handler({event},{values})")
+    super().handler(event, values)
+
+  def layout(self) -> List[List[Any]]:
     return [
+      [ sg.Text('Levels', font=self._h1()) ],
       [
         sg.Text('Current Level:', font=self._bold()),
-        sg.Multiline(size=(20,20), key='/level/progress'),
-        sg.Button('Remove Level', key='/level/remove',
-                  disabled=(len(self.model.classes)==0)
+        sg.Multiline(size=(20,20), key='/levels/progress'),
+        sg.Button('Remove Level', key='/levels/remove',
+                  disabled=(len(self._model._progress)==0)
                   )
       ],
       [
-        sg.Listbox([c.name for c in self.model.choice()], 
-                   size=(10, len(self.model.choice())), 
-                   key="/level/choice"),
-        sg.Button('Add Level', key='/level/add',
-                  disabled=(len(self.model.classes)==20)),
+        sg.Listbox(self._model._choices, 
+                   size=(10, len(self._model._choices)), 
+                   key="/levels/choice"),
+        sg.Button('Add Level', key='/levels/add',
+                  disabled=(len(self._model._progress)==20)),
       ],
     ]
+  
+  def update(self, model:Model) -> None:
+    super().update(model)
+

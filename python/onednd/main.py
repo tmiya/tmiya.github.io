@@ -20,7 +20,7 @@ def main():
       case _:
         print(f"dispatch({event}, {values})")
         root_view.handler(event, values)
-    #root.update()
+    root.notify()
     #print(root)
 
 if __name__ == '__main__':
