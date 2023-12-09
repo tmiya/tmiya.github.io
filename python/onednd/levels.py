@@ -11,10 +11,12 @@ class Levels(Model):
     super().__init__('/levels/', {})
     self._progress:List[str] = []
 
-  def is_multiclassed(self) -> bool:
-    return len(set(self._progress)) > 1
-  
   def satisfy_primal_ability(self) -> bool:
+    abis = self['/abilities/']._abilities
+    for cn in set(self._progress):
+      for pa in Classes.by_name(cn)._primary_ability:
+        if abis[pa] < 13:
+          return False
     return True
 
 class LevelsView(View):
@@ -35,9 +37,8 @@ class LevelsView(View):
       case '/levels/add':
         if len(values['/levels/choice'])==1 and len(m._progress)<20:
           m._progress.append(values['/levels/choice'][0])
-          if m.is_multiclassed():
-            if not m.satisfy_primal_ability():
-              m._progress.pop()
+          if not m.satisfy_primal_ability():
+            m._progress.pop()
         else:
           print(f"ERROR: {self}.handler({event},{values})")
       case '/levels/remove':

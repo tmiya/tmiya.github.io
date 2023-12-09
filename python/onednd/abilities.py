@@ -2,6 +2,7 @@ import PySimpleGUI as sg
 from typing import Dict, List, Tuple, Any, Callable, Self
 
 from model import Model, View
+from classes import Classes
 
 class Abilities(Model):
   _abi_names:List[str] = ['Str', 'Dex', 'Con', 'Int', 'Wis', 'Cha']
@@ -83,6 +84,7 @@ class AbilitiesView(View):
                   disabled=False),
         sg.Button('-', key=f"/abilities/{s}/-",
                   disabled=True),
+        sg.Text(", ".join(Classes.classes_by_primal_ability(s))),
       ]
       for s in Abilities._abi_names
     ])
