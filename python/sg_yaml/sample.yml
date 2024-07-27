@@ -1,0 +1,10 @@
+title: My new window
+layout:
+  - - Text:
+        _: This is a very basic PySimpleGUI layout
+  - - Input:
+  - - Button:
+        button_text: Button
+    - Button:
+        _: Exit
+  
