@@ -32,26 +32,32 @@ mkdir -p vids
 # rm concatlist.txt
 lualatex --interaction=batchmode "\def\voice{$voice}\def\narrator{$narrator}\input{$base.tex}"
 lualatex --interaction=batchmode "\def\voice{$voice}\def\narrator{$narrator}\input{$base.tex}"
-##dvipdfmx "$base.dvi"
 echo "jpdfannots.py starts"
 jpdfannots.py "$base.pdf" -o frames/annots.out
 cat frames/annots.out
 jannots2audio.py $narrator $voice frames/annots.out
-ffmpeg -hide_banner -loglevel error \
-  -i "clips/$narrator.mp4" -vf scale=160:120 "frames/$narrator.mp4"
+#ffmpeg -hide_banner -loglevel error \
+#  -i "clips/$narrator.mp4" -vf scale=160:120 "frames/$narrator.mp4"
 gs -dSAFER -dQUIET -dNOPLATFONTS -sDEVICE=pngalpha -sOutputFile=frames/frame%03d.png -dNOPAUSE -dBATCH -r144 $base.pdf
 for entry in $(basename -a -s .png frames/frame*.png)
 do
   echo "mixing ......... $entry"
+
   ffmpeg -hide_banner -loglevel error \
-  -stream_loop -1 -i frames/$narrator.mp4 -i frames/$entry.wav -shortest frames/$entry.mp4
-  ffmpeg -hide_banner -loglevel error \
-  -i frames/$entry.png -i frames/$entry.mp4 \
-  -filter_complex "overlay=x=(main_w-overlay_w-10):y=(main_h-overlay_h-10)" \
-  -map 1:a \
-  -c:v libx264 -crf 18 -pix_fmt yuv420p \
-  -c:a copy \
-  vids/$entry.mp4
+    -loop 1 -i frames/$entry.png \
+    -loop 1 -i clips/$narrator.png \
+    -i frames/$entry.wav \
+    -filter_complex \
+    "[1:v]split=2[alpha][img]; \
+    [alpha]alphaextract[alphamask]; \
+    [img]format=rgba[img_rgba]; \
+    [img_rgba][alphamask]alphamerge[fg]; \
+    [0:v][fg]overlay=main_w-overlay_w-10:main_h-overlay_h-10:shortest=1[outv]" \
+    -map "[outv]" -map 2:a \
+    -c:v libx264 -tune stillimage -crf 23 -pix_fmt yuv420p \
+    -c:a aac -b:a 192k \
+    -shortest \
+    vids/$entry.mp4
 done
 cd vids
 for f in *.mp4; do echo "file '$f'" >> concatlist.txt; done

@@ -1,6 +1,6 @@
-This is LuaHBTeX, Version 1.15.0 (TeX Live 2022)  (format=lualatex 2022.12.30)  29 NOV 2025 18:34
+This is LuaHBTeX, Version 1.15.0 (TeX Live 2022)  (format=lualatex 2022.12.30)  6 DEC 2025 13:06
  restricted system commands enabled.
-**\def\voice{2}\def\narrator{Lisa}\input{jsample.tex}
+**\def\voice{2}\def\narrator{metan}\input{jsample.tex}
 Lua module: luaotfload 2022-03-18 3.21 Lua based OpenType font support
 Lua module: lualibs 2021-05-20 2.74 ConTeXt Lua standard libraries.
 Lua module: lualibs-extended 2021-05-20 2.74 ConTeXt Lua libraries -- extended collection.
@@ -1412,47 +1412,52 @@ LaTeX Font Info:    Font shape `JT3/IPAExGothic(0)/m/n' will be
 LaTeX Font Info:    Font shape `JY3/IPAExGothic(0)/m/n' will be
 (Font)              scaled to size 5.77332pt on input line 16.
 LaTeX Font Info:    Font shape `JT3/IPAExGothic(0)/m/n' will be
-(Font)              scaled to size 16.62714pt on input line 20.
+(Font)              scaled to size 16.62714pt on input line 23.
 LaTeX Font Info:    Font shape `JY3/IPAExGothic(0)/m/n' will be
-(Font)              scaled to size 16.62714pt on input line 20.
+(Font)              scaled to size 16.62714pt on input line 23.
 LaTeX Font Info:    Font shape `JT3/IPAExGothic(0)/m/n' will be
-(Font)              scaled to size 7.69775pt on input line 20.
+(Font)              scaled to size 7.69775pt on input line 23.
 LaTeX Font Info:    Font shape `JY3/IPAExGothic(0)/m/n' will be
-(Font)              scaled to size 7.69775pt on input line 20.
+(Font)              scaled to size 7.69775pt on input line 23.
+Package marginnote Info: Margin note 1.1 is on absolute page 1 on input line 23
+.
+Package marginnote Info: right page because not two side mode on input line 23.
+
+Package marginnote Info: xpos seems to be 28.45274pt on input line 23.
 LaTeX Font Info:    Font shape `JT3/IPAExGothic(0)/m/n' will be
-(Font)              scaled to size 3.84888pt on input line 20.
+(Font)              scaled to size 3.84888pt on input line 23.
 LaTeX Font Info:    Font shape `JY3/IPAExGothic(0)/m/n' will be
-(Font)              scaled to size 3.84888pt on input line 20.
+(Font)              scaled to size 3.84888pt on input line 23.
 [1
 
 
 \openout5 = jsample.upa
 {/usr/local/texlive/2022/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
-Package marginnote Info: Margin note 2.1 is on absolute page 2 on input line 32
+Package marginnote Info: Margin note 2.1 is on absolute page 2 on input line 35
 .
-Package marginnote Info: right page because not two side mode on input line 32.
+Package marginnote Info: right page because not two side mode on input line 35.
 
-Package marginnote Info: xpos seems to be 74.63927pt on input line 32.
+Package marginnote Info: xpos seems to be 74.63927pt on input line 35.
 [2
 
 ]
-Package marginnote Info: Margin note 3.1 is on absolute page 3 on input line 52
+Package marginnote Info: Margin note 3.1 is on absolute page 3 on input line 55
 .
-Package marginnote Info: right page because not two side mode on input line 52.
+Package marginnote Info: right page because not two side mode on input line 55.
 
-Package marginnote Info: xpos seems to be 213.19884pt on input line 52.
+Package marginnote Info: xpos seems to be 213.19884pt on input line 55.
 [3
 
 ]
 LaTeX Font Info:    Font shape `JT3/IPAExGothic(0)/m/n' will be
-(Font)              scaled to size 23.94002pt on input line 59.
+(Font)              scaled to size 23.94002pt on input line 62.
 LaTeX Font Info:    Font shape `JY3/IPAExGothic(0)/m/n' will be
-(Font)              scaled to size 23.94002pt on input line 59.
-Package marginnote Info: Margin note 4.1 is on absolute page 4 on input line 59
+(Font)              scaled to size 23.94002pt on input line 62.
+Package marginnote Info: Margin note 4.1 is on absolute page 4 on input line 62
 .
-Package marginnote Info: right page because not two side mode on input line 59.
+Package marginnote Info: right page because not two side mode on input line 62.
 
-Package marginnote Info: xpos seems to be 112.24281pt on input line 59.
+Package marginnote Info: xpos seems to be 112.24281pt on input line 62.
 [4
 
 ]
@@ -1471,24 +1476,24 @@ Package rerunfilecheck Info: File `jsample.out' has not changed.
 )
 
 Here is how much of LuaTeX's memory you used:
- 31434 strings out of 477785
+ 31435 strings out of 477785
  125244,1144653 words of node,token memory allocated
- 30122 words of node memory still in use:
+ 30152 words of node memory still in use:
    32 hlist, 14 vlist, 27 rule, 6 local_par, 75 glue, 374 kern, 20 penalty, 19 g
-lyph, 11946 attribute, 264 glue_spec, 616 attribute_list, 7 write, 1 close, 1 sa
+lyph, 11946 attribute, 270 glue_spec, 616 attribute_list, 7 write, 1 close, 1 sa
 ve_pos, 64 user_defined, 1 pdf_annot, 10 pdf_colorstack nodes
-   avail lists: 1:28,2:25306,3:349,4:510,5:96,6:40,7:2049,8:72,9:1001,10:26,11:8
- 50621 multiletter control sequences out of 65536+600000
+   avail lists: 1:29,2:25306,3:349,4:554,5:96,6:49,7:2049,8:76,9:1001,10:26,11:8
+ 50622 multiletter control sequences out of 65536+600000
  49 fonts using 55374111 bytes
- 132i,14n,118p,1827b,748s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 132i,14n,118p,1828b,748s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2022/texmf-dist/fonts/opentype/public/lm/lmsans12-regular.ot
 f></usr/local/texlive/2022/texmf-dist/fonts/opentype/public/lm/lmsans17-regular.
 otf></usr/local/texlive/texmf-local/fonts/truetype/cjk-gs-integrate/IPAexGothic.
 ttf>
-Output written on jsample.pdf (4 pages, 190252 bytes).
+Output written on jsample.pdf (4 pages, 190297 bytes).
 
-PDF statistics: 147 PDF objects out of 1000 (max. 8388607)
- 124 compressed objects within 2 object streams
+PDF statistics: 148 PDF objects out of 1000 (max. 8388607)
+ 125 compressed objects within 2 object streams
  9 named destinations out of 1000 (max. 131072)
  16 words of extra memory for PDF output out of 10000 (max. 100000000)
 
