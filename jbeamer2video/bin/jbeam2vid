@@ -13,7 +13,7 @@ then
 fi
 if [ "$narrator" = "" ];
 then
-   narrator="Lisa";
+   narrator="metan";
 fi
 if [ "$voice" = "" ];
 then
@@ -36,13 +36,16 @@ echo "jpdfannots.py starts"
 jpdfannots.py "$base.pdf" -o frames/annots.out
 cat frames/annots.out
 jannots2audio.py $narrator $voice frames/annots.out
-#ffmpeg -hide_banner -loglevel error \
-#  -i "clips/$narrator.mp4" -vf scale=160:120 "frames/$narrator.mp4"
-gs -dSAFER -dQUIET -dNOPLATFONTS -sDEVICE=pngalpha -sOutputFile=frames/frame%03d.png -dNOPAUSE -dBATCH -r144 $base.pdf
+gs -o temp_noannot.pdf -dSAFER -dBATCH -dNOPAUSE -sDEVICE=pdfwrite \
+   -dShowAnnots=false "$base.pdf"
+gs -dSAFER -dQUIET -dNOPLATFONTS \
+   -sDEVICE=pngalpha \
+   -sOutputFile=frames/frame%03d.png \
+   -dNOPAUSE -dBATCH -r144 \
+   temp_noannot.pdf
 for entry in $(basename -a -s .png frames/frame*.png)
 do
   echo "mixing ......... $entry"
-
   ffmpeg -hide_banner -loglevel error \
     -loop 1 -i frames/$entry.png \
     -loop 1 -i clips/$narrator.png \

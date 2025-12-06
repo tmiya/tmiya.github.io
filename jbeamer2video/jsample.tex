@@ -3,8 +3,16 @@
 \usepackage[ipaex]{luatexja-preset}% IPAexフォントしたい
 \renewcommand{\kanjifamilydefault}{\gtdefault}% 既定をゴシック体に
 
-\usepackage[author={narration}]{pdfcomment}
-\definestyle{note}{icon=Insert,color=red} 
+\usepackage[author={narration},hidenotes]{pdfcomment}
+\makeatletter
+\pdfcomment@set@display@false   % ← すべてのアイコンを強制非表示
+\definestyle{note}{
+  icon=Comment,
+  color=white,
+  borderwidth=0,
+  opacity=0
+}
+\makeatother
 \newcommand{\pdfnarration}[1]{%
 \onslide*<\value{beamerpauses}>{\pdfmargincomment[style=note,author=narration]{#1}}%
 }
@@ -17,6 +25,9 @@
 
 \begin{frame}
 \titlepage
+\pdfnarration{
+日本語Beamer動作確認
+}
 \end{frame}
 
 \begin{frame}{日本語がちゃんと表示されるか確認}
